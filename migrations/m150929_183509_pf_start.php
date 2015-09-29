@@ -9,7 +9,7 @@ class m150929_183509_pf_start extends EDbMigration {
             `name` varchar(20) NOT NULL COMMENT 'Delivery type',
             `load_meters` decimal(10,2) DEFAULT NULL COMMENT 'Load meters',
             PRIMARY KEY (`id`)
-          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
+          ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
             CREATE TABLE `pf_order` (
               `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -30,7 +30,7 @@ class m150929_183509_pf_start extends EDbMigration {
               KEY `planed_delivery_type` (`planed_delivery_type`),
               CONSTRAINT `pf_order_ibfk_1` FOREIGN KEY (`client_ccmp_id`) REFERENCES `ccmp_company` (`ccmp_id`),
               CONSTRAINT `pf_order_ibfk_2` FOREIGN KEY (`planed_delivery_type`) REFERENCES `pf_delivery_type` (`id`)
-            ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8
+            ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
             CREATE TABLE `pf_order_items` (
               `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -45,7 +45,7 @@ class m150929_183509_pf_start extends EDbMigration {
               KEY `manufakturer_ccmp_id` (`manufakturer_ccmp_id`),
               CONSTRAINT `pf_order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `pf_order` (`id`),
               CONSTRAINT `pf_order_items_ibfk_2` FOREIGN KEY (`manufakturer_ccmp_id`) REFERENCES `ccmp_company` (`ccmp_id`)
-            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
+            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 
                  ";
