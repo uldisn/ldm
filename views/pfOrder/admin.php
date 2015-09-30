@@ -78,7 +78,7 @@ $this->widget('TbGridView', [
         ],
         [
             'name' => 'client_ccmp_id',
-            'value' => '$data->clientCcmp->ccmp_name',
+            'value' => '$data->clientCcmp?$data->clientCcmp->ccmp_name:""',
             'filter' => $filterCcmp,
         ],
         [
@@ -103,7 +103,7 @@ $this->widget('TbGridView', [
         ],
         [
             'name' => 'planed_delivery_type',
-            'value' => '$data->planedDeliveryType->name',
+            'value' => '$data->planedDeliveryType?$data->planedDeliveryType->name:""',
             'filter' => $filterType,
         ],
         [
