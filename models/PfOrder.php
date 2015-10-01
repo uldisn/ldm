@@ -11,7 +11,6 @@ class PfOrder extends BasePfOrder {
     public $desired_date_range;
     public $planed_dispatch_date_range;
     public $planed_delivery_date_range;
-    
     private $_userPersonCompanies = false;
 
     // Add your model-specific methods here. This file will not be overriden by gtc except you force it.
@@ -77,32 +76,41 @@ class PfOrder extends BasePfOrder {
         $criteria->compare("concat(YEAR(planed_dispatch_date),'/',WEEK(planed_dispatch_date,1))", $this->week_number, true);
 //planed_dispatch_date_range,planed_delivery_date_range
 
-        if(!empty($this->order_date_range)){
-            $criteria->AddCondition("t.order_date >= '".substr($this->order_date_range,0,10)."'");
-            $criteria->AddCondition("t.order_date <= '".substr($this->order_date_range,-10)."'");
-        }            
-        
-        if(!empty($this->desired_date_range)){
-            $criteria->AddCondition("t.desired_date >= '".substr($this->desired_date_range,0,10)."'");
-            $criteria->AddCondition("t.desired_date <= '".substr($this->desired_date_range,-10)."'");
-        }            
+        if (!empty($this->order_date_range)) {
+            $criteria->AddCondition("t.order_date >= '" . substr($this->order_date_range, 0, 10) . "'");
+            $criteria->AddCondition("t.order_date <= '" . substr($this->order_date_range, -10) . "'");
+        }
 
-        if(!empty($this->planed_dispatch_date_range)){
-            $criteria->AddCondition("t.planed_dispatch_date >= '".substr($this->planed_dispatch_date_range,0,10)."'");
-            $criteria->AddCondition("t.planed_dispatch_date <= '".substr($this->planed_dispatch_date_range,-10)."'");
-        }            
-        
-        if(!empty($this->planed_delivery_date_range)){
-            $criteria->AddCondition("t.planed_delivery_date >= '".substr($this->planed_delivery_date_range,0,10)."'");
-            $criteria->AddCondition("t.planed_delivery_date <= '".substr($this->planed_delivery_date_range,-10)."'");
-        }            
-        
+        if (!empty($this->desired_date_range)) {
+            $criteria->AddCondition("t.desired_date >= '" . substr($this->desired_date_range, 0, 10) . "'");
+            $criteria->AddCondition("t.desired_date <= '" . substr($this->desired_date_range, -10) . "'");
+        }
+
+        if (!empty($this->planed_dispatch_date_range)) {
+            $criteria->AddCondition("t.planed_dispatch_date >= '" . substr($this->planed_dispatch_date_range, 0, 10) . "'");
+            $criteria->AddCondition("t.planed_dispatch_date <= '" . substr($this->planed_dispatch_date_range, -10) . "'");
+        }
+
+        if (!empty($this->planed_delivery_date_range)) {
+            $criteria->AddCondition("t.planed_delivery_date >= '" . substr($this->planed_delivery_date_range, 0, 10) . "'");
+            $criteria->AddCondition("t.planed_delivery_date <= '" . substr($this->planed_delivery_date_range, -10) . "'");
+        }
+
         /**
          * filtrs klientiem un pircejiem 
          * orderam vai itemam jabut savas kompanijas
          */
-        $cl = $this->getUserPersonCompaniesIds();
-        if (!empty($cl)) {
+        if (Yii::app()->user->checkAccess('Ldm.PfOrder.Menu')) {
+            
+            $cl = $this->getUserPersonCompaniesIds();
+            
+            /**
+             * ja nav pievienota neviena kompanija lietotjama, sarakstu nerada
+             */
+            if (!empty($cl)) {
+                $cl = [0];
+            }
+            
             $criteria->join = "  
                 LEFT OUTER JOIN pf_order_items items 
                     ON t.id = items.order_id 
@@ -111,7 +119,6 @@ class PfOrder extends BasePfOrder {
                        t.client_ccmp_id           in (" . implode(',', $cl) . ") 
                     or items.manufakturer_ccmp_id in (" . implode(',', $cl) . ")";
         }
-
         $criteria = $this->searchCriteria($criteria);
         return new CActiveDataProvider(get_class($this), [
             'criteria' => $criteria,
