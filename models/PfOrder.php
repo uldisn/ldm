@@ -100,15 +100,16 @@ class PfOrder extends BasePfOrder {
          * filtrs klientiem un pircejiem 
          * orderam vai itemam jabut savas kompanijas
          */
-        if (Yii::app()->user->checkAccess('Ldm.PfOrder.Menu')) {
+        if (Yii::app()->user->checkAccess('Ldm.PfOrder.Menu')
+                && !Yii::app()->user->checkAccess('Administrator')) {
             
             $cl = $this->getUserPersonCompaniesIds();
             
             /**
              * ja nav pievienota neviena kompanija lietotjama, sarakstu nerada
              */
-            if (!empty($cl)) {
-                $cl = [0];
+            if (count($cl) == 0) {
+                $cl = ['0'];
             }
             
             $criteria->join = "  
