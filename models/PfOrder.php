@@ -68,7 +68,7 @@ class PfOrder extends BasePfOrder {
         }
 
         $criteria->distinct = true;
-
+        $criteria->select = 't.*';
         /**
          * add column week_number
          */
@@ -100,7 +100,7 @@ class PfOrder extends BasePfOrder {
          * filtrs klientiem un pircejiem 
          * orderam vai itemam jabut savas kompanijas
          */
-        if (Yii::app()->user->checkAccess('Ldm.PfOrder.Menu')
+        if (Yii::app()->user->checkAccess('Orders')
                 && !Yii::app()->user->checkAccess('Administrator')) {
             
             $cl = $this->getUserPersonCompaniesIds();
@@ -128,7 +128,7 @@ class PfOrder extends BasePfOrder {
 
     public function getUserPersonCompanies() {
 
-        if (!$this->_userPersonCompanies) {
+        if ($this->_userPersonCompanies) {
             return $this->_userPersonCompanies;
         }
 
