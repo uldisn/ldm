@@ -11,6 +11,7 @@
  * @property string $load_meters
  * @property string $m3
  * @property string $notes
+ * @property string $notes_admin_manufacturer
  *
  * Relations of table "pf_order_items" available as properties of the model:
  * @property PfOrder $order
@@ -34,13 +35,13 @@ abstract class BasePfOrderItems extends CActiveRecord
         return array_merge(
             parent::rules(), array(
                 array('order_id', 'required'),
-                array('manufakturer_ccmp_id, planed_ready_date, load_meters, m3, notes', 'default', 'setOnEmpty' => true, 'value' => null),
+                array('manufakturer_ccmp_id, planed_ready_date, load_meters, m3, notes, notes_admin_manufacturer', 'default', 'setOnEmpty' => true, 'value' => null),
                 array('load_meters, m3', 'type','type'=>'float'),
                 array('order_id, manufakturer_ccmp_id', 'length', 'max' => 10),
                 array('load_meters', 'length', 'max' => 6),
                 array('m3', 'length', 'max' => 11),
-                array('planed_ready_date, notes', 'safe'),
-                array('id, order_id, manufakturer_ccmp_id, planed_ready_date, load_meters, m3, notes', 'safe', 'on' => 'search'),
+                array('planed_ready_date, notes, notes_admin_manufacturer', 'safe'),
+                array('id, order_id, manufakturer_ccmp_id, planed_ready_date, load_meters, m3, notes, notes_admin_manufacturer', 'safe', 'on' => 'search'),
             )
         );
     }
@@ -81,6 +82,7 @@ abstract class BasePfOrderItems extends CActiveRecord
             'load_meters' => Yii::t('LdmModule.model', 'Load meters'),
             'm3' => Yii::t('LdmModule.model', 'Cubic meters'),
             'notes' => Yii::t('LdmModule.model', 'Notes'),
+            'notes_admin_manufacturer' => Yii::t('LdmModule.model', 'Internal notes'),
         );
     }
 
@@ -97,6 +99,7 @@ abstract class BasePfOrderItems extends CActiveRecord
         $criteria->compare('t.load_meters', $this->load_meters, true);
         $criteria->compare('t.m3', $this->m3, true);
         $criteria->compare('t.notes', $this->notes, true);
+        $criteria->compare('t.notes_admin_manufacturer', $this->notes_admin_manufacturer, true);
 
 
         return $criteria;

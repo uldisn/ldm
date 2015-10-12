@@ -69,6 +69,20 @@ if(!$ajax || $ajax == 'pf-order-items-grid'){
     $model->unsetAttributes();
     $model->order_id = $modelMain->primaryKey;
 
+    $internalNotesVisible = false;
+    if(Yii::app()->user->checkAccess('OrdersAdmin')){
+        $internalNotesVisible = true;
+    }else{
+        $ccuc = CcucUserCompany::model()->getPersonCompnies(
+                    Yii::app()->getModule('user')->user()->profile->person_id, CcucUserCompany::CCUC_STATUS_PERSON);    
+        foreach ($ccuc as $c) {
+            if ($c->ccuc_ccmp_id == Yii::app()->sysCompany->getActiveCompany()) {
+                continue;
+            }
+            $internalNotesVisible = $internalNotesVisible || $c->ccuc_ccmp_id != $modelMain->client_ccmp_id;
+        }    
+    }
+    
     // render grid view
 
     $this->widget('TbGridView',
@@ -128,6 +142,17 @@ if(!$ajax || $ajax == 'pf-order-items-grid'){
                 ]
             ],
 
+            array(
+                'class' => 'editable.EditableColumn',
+                'name' => 'notes_admin_manufacturer',
+                'editable' => array(
+                    'type' => 'textarea',
+                    'url' => $this->createUrl('//ldm/pfOrderItems/editableSaver'),
+                    //'placement' => 'right',
+                ),
+                'visible' => $internalNotesVisible,
+            ),                
+
                 [
                     'class' => 'TbButtonColumn',
                     'buttons' => [
@@ -142,9 +167,7 @@ if(!$ajax || $ajax == 'pf-order-items-grid'){
             ]
         ]
     );
-    ?>
 
-<?php
     Yii::endProfile('order_id.view.grid');
 }    
-?>
+
