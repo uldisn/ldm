@@ -70,7 +70,9 @@ if(!$ajax || $ajax == 'pf-order-items-grid'){
     $model->order_id = $modelMain->primaryKey;
 
     $internalNotesVisible = false;
-    if(Yii::app()->user->checkAccess('OrdersAdmin')){
+    if(Yii::app()->user->checkAccess('SysAdmin')){
+        $internalNotesVisible = false;
+    }elseif(Yii::app()->user->checkAccess('OrdersAdmin')){    
         $internalNotesVisible = true;
     }else{
         $ccuc = CcucUserCompany::model()->getPersonCompnies(
