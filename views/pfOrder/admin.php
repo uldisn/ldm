@@ -1,12 +1,42 @@
 <?php
+Yii::app()->clientScript->registerCss('hide_for_print', "
+@media print {
+	.btn {
+		display: none !important;
+	}
+
+	#navbar {
+		display: none !important;
+	}
+
+	#sidebar {
+		display: none !important;
+	}
+
+
+	.button-column {
+		display: none !important;
+	}
+    
+	.main-content{
+		margin-left: 0px !important;
+	}
+    
+    .editable-click, a.editable-click {
+        border-bottom: none !important;
+    }
+/*    a[href]:after{content:none} */
+}
+");
+
 $this->setPageTitle(Yii::t('LdmModule.model', 'Orders'));
 
 Yii::app()->clientScript->registerScript('filter_init', '
 function filter_pf_order_init(){
     filter_PfOrder_order_date_range_init();
     filter_PfOrder_desired_date_range_init();
-    filter_PfOrder_planed_dispatch_date_range_init();
-    filter_PfOrder_planed_delivery_date_range_init();
+//    filter_PfOrder_planed_dispatch_date_range_init();
+//    filter_PfOrder_planed_delivery_date_range_init();
 }
 ');
 ?>
@@ -73,6 +103,9 @@ $this->widget('TbGridView', [
     ],
     'columns' => [
         [
+            'name' => 'week_number',
+        ],        
+        [
             //varchar(20)
             'name' => 'number',
         ],
@@ -101,27 +134,25 @@ $this->widget('TbGridView', [
                 ]
                     ], TRUE),
         ],
-        [
-            'name' => 'planed_delivery_type',
-            'value' => '$data->planedDeliveryType?$data->planedDeliveryType->name:""',
-            'filter' => $filterType,
-        ],
+//        [
+//            'name' => 'planed_delivery_type',
+//            'value' => '$data->planedDeliveryType?$data->planedDeliveryType->name:""',
+//            'filter' => $filterType,
+//        ],
         [
             'name' => 'groupage'
         ],
-        [
-            'name' => 'week_number',
-        ],
-        [
-            'name' => 'planed_dispatch_date',
-            'filter' => $this->widget('vendor.dbrisinajumi.DbrLib.widgets.TbFilterDateRangePicker', [
-                'model' => $model,
-                'attribute' => 'planed_dispatch_date_range',
-                'options' => [
-                    'ranges' => ['today', 'yesterday', 'this_week', 'last_week', 'this_month', 'last_month', 'this_year'],
-                ]
-                    ], TRUE),
-        ],
+
+//        [
+//            'name' => 'planed_dispatch_date',
+//            'filter' => $this->widget('vendor.dbrisinajumi.DbrLib.widgets.TbFilterDateRangePicker', [
+//                'model' => $model,
+//                'attribute' => 'planed_dispatch_date_range',
+//                'options' => [
+//                    'ranges' => ['today', 'yesterday', 'this_week', 'last_week', 'this_month', 'last_month', 'this_year'],
+//                ]
+//                    ], TRUE),
+//        ],
         [
             'name' => 'planed_delivery_date',
             'filter' => $this->widget('vendor.dbrisinajumi.DbrLib.widgets.TbFilterDateRangePicker', [

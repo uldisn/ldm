@@ -123,6 +123,10 @@ class PfOrder extends BasePfOrder {
         $criteria = $this->searchCriteria($criteria);
         return new CActiveDataProvider(get_class($this), [
             'criteria' => $criteria,
+            'pagination' => array('pageSize' => 25),
+            'sort'=>array(
+                'defaultOrder'=>'week_number DESC',
+            ),            
         ]);
     }
 
