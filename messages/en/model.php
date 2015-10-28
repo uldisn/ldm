@@ -17,7 +17,7 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
-  'Client Ccmp' => '',
+  'Client Ccmp' => 'Client',
   'Create Delivery Type' => '',
   'Create Order' => '',
   'Create Pf Delivery Type' => '',
