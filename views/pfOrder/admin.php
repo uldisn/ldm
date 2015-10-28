@@ -25,7 +25,7 @@ Yii::app()->clientScript->registerCss('hide_for_print', "
     .editable-click, a.editable-click {
         border-bottom: none !important;
     }
-/*    a[href]:after{content:none} */
+    a[href]:after{content:none} 
 }
 ");
 
@@ -176,26 +176,26 @@ $this->widget('TbGridView', [
             'name' => 'm3',
         ],
         [
-            'class' => 'editable.EditableColumn',
+//            'class' => 'editable.EditableColumn',
             'name' => 'notes',
-            'editable' => [
-                'type' => 'textarea',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-            //'placement' => 'right',
-            ]
+//            'editable' => [
+//                'type' => 'textarea',
+//                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+//            //'placement' => 'right',
+//            ]
         ],
         [
             'class' => 'TbButtonColumn',
             'buttons' => [
                 'view' => ['visible' => 'Yii::app()->user->checkAccess("Ldm.PfOrder.View")'],
                 'update' => ['visible' => 'FALSE'],
-                'delete' => ['visible' => 'Yii::app()->user->checkAccess("Ldm.PfOrder.Delete")'],
+                'delete' => ['visible' => 'FALSE'],
             ],
             'viewButtonUrl' => 'Yii::app()->controller->createUrl("view", array("id" => $data->id))',
-            'deleteButtonUrl' => 'Yii::app()->controller->createUrl("delete", array("id" => $data->id))',
+            //'deleteButtonUrl' => 'Yii::app()->controller->createUrl("delete", array("id" => $data->id))',
             'deleteConfirmation' => Yii::t('LdmModule.crud', 'Do you want to delete this item?'),
             'viewButtonOptions' => ['data-toggle' => 'tooltip'],
-            'deleteButtonOptions' => ['data-toggle' => 'tooltip'],
+            //'deleteButtonOptions' => ['data-toggle' => 'tooltip'],
         ],
     ]
         ]

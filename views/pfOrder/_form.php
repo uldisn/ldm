@@ -63,33 +63,34 @@
                             <span class="tooltip-wrapper" data-toggle='tooltip' data-placement="right"
                                  title='<?php echo (($t = Yii::t('LdmModule.model', 'tooltip.client_ccmp_id')) != 'tooltip.client_ccmp_id')?$t:'' ?>'>
                                 <?php
-                                $ccuc = CcucUserCompany::model()->getPersonCompnies(
-                                        Yii::app()->getModule('user')->user()->profile->person_id, 
-                                        CcucUserCompany::CCUC_STATUS_PERSON);
-                                $cl = [];
-                                foreach ($ccuc as $c){
-                                    if($c->ccuc_ccmp_id == Yii::app()->sysCompany->getActiveCompany()){
-                                        continue;
-                                    }
-                                    $cl[] = $c->ccuc_ccmp_id;
-                                }
-
-                                $criteria = new CDBCriteria();
-                                if(!empty($cl)){
-                                    $criteria->condition = "ccmp_id in (".implode(',',$cl) . ")";
-                                }
+//                                $ccuc = CcucUserCompany::model()->getPersonCompnies(
+//                                        Yii::app()->getModule('user')->user()->profile->person_id, 
+//                                        CcucUserCompany::CCUC_STATUS_PERSON);
+//                                $cl = [];
+//                                foreach ($ccuc as $c){
+//                                    if($c->ccuc_ccmp_id == Yii::app()->sysCompany->getActiveCompany()){
+//                                        continue;
+//                                    }
+//                                    $cl[] = $c->ccuc_ccmp_id;
+//                                }
+//
+//                                $criteria = new CDBCriteria();
+//                                if(!empty($cl)){
+//                                    $criteria->condition = "ccmp_id in (".implode(',',$cl) . ")";
+//                                }
                                 
                                 $this->widget(
                                 '\GtcRelation',
                                 [
                                     'model' => $model,
                                     'relation' => 'clientCcmp',
-                                    'criteria' => $criteria,                    
+                                    //'criteria' => $criteria,                    
                                     'fields' => 'itemLabel',
                                     'allowEmpty' => true,
                                     'style' => 'dropdownlist',
                                     'htmlOptions' => [
-                                        'checkAll' => 'all'
+                                        'checkAll' => 'all',
+                                        'style' => 'width: 212px;',
                                     ],
                                 ]
                                 );
@@ -177,7 +178,8 @@
                     'allowEmpty' => true,
                     'style' => 'dropdownlist',
                     'htmlOptions' => [
-                        'checkAll' => 'all'
+                        'checkAll' => 'all',
+                        'style' => 'width: 212px;',                        
                     ],
                 ]
                 );

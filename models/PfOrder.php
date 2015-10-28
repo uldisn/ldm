@@ -117,8 +117,9 @@ class PfOrder extends BasePfOrder {
                     ON t.id = items.order_id 
             ";
             $criteria->condition = "
-                       t.client_ccmp_id           in (" . implode(',', $cl) . ") 
-                    or items.manufakturer_ccmp_id in (" . implode(',', $cl) . ")";
+                       t.client_ccmp_id           in (" . implode(',', $cl) . ") "      //orders ir usera kompānija
+                    . " or items.manufakturer_ccmp_id in (" . implode(',', $cl) . ") "  //itema ražotājs ir user kompānija
+                    . " or items.manufakturer_ccmp_id is null";                         //orderim vēl nav neviens items
         }
         $criteria = $this->searchCriteria($criteria);
         return new CActiveDataProvider(get_class($this), [
