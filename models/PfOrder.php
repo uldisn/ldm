@@ -66,9 +66,37 @@ class PfOrder extends BasePfOrder {
         if (is_null($criteria)) {
             $criteria = new CDbCriteria;
         }
-
+        $criteria = $this->searchCriteria($criteria);
+        
         $criteria->distinct = true;
         $criteria->select = 't.*';
+        
+        /**
+         * filtrs klientiem un pircejiem 
+         * orderam vai itemam jabut savas kompanijas
+         */
+        if (Yii::app()->user->checkAccess('Orders')
+                && !Yii::app()->user->checkAccess('Administrator')) {
+            
+            $cl = $this->getUserPersonCompaniesIds();
+            
+            /**
+             * ja nav pievienota neviena kompanija lietotjama, sarakstu nerada
+             */
+            if (count($cl) == 0) {
+                $cl = ['0'];
+            }
+            
+            $criteria->join = "  
+                LEFT OUTER JOIN pf_order_items items 
+                    ON t.id = items.order_id 
+            ";
+            $criteria->condition = "
+                       t.client_ccmp_id           in (" . implode(',', $cl) . ") "      //orders ir usera kompānija
+                    . " or items.manufakturer_ccmp_id in (" . implode(',', $cl) . ") "  //itema ražotājs ir user kompānija
+                    . " or items.manufakturer_ccmp_id is null";                         //orderim vēl nav neviens items
+        }
+        
         /**
          * add column week_number
          */
@@ -96,32 +124,7 @@ class PfOrder extends BasePfOrder {
             $criteria->AddCondition("t.planed_delivery_date <= '" . substr($this->planed_delivery_date_range, -10) . "'");
         }
 
-        /**
-         * filtrs klientiem un pircejiem 
-         * orderam vai itemam jabut savas kompanijas
-         */
-        if (Yii::app()->user->checkAccess('Orders')
-                && !Yii::app()->user->checkAccess('Administrator')) {
-            
-            $cl = $this->getUserPersonCompaniesIds();
-            
-            /**
-             * ja nav pievienota neviena kompanija lietotjama, sarakstu nerada
-             */
-            if (count($cl) == 0) {
-                $cl = ['0'];
-            }
-            
-            $criteria->join = "  
-                LEFT OUTER JOIN pf_order_items items 
-                    ON t.id = items.order_id 
-            ";
-            $criteria->condition = "
-                       t.client_ccmp_id           in (" . implode(',', $cl) . ") "      //orders ir usera kompānija
-                    . " or items.manufakturer_ccmp_id in (" . implode(',', $cl) . ") "  //itema ražotājs ir user kompānija
-                    . " or items.manufakturer_ccmp_id is null";                         //orderim vēl nav neviens items
-        }
-        $criteria = $this->searchCriteria($criteria);
+        
         return new CActiveDataProvider(get_class($this), [
             'criteria' => $criteria,
             'pagination' => array('pageSize' => 25),

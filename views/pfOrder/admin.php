@@ -35,7 +35,7 @@ Yii::app()->clientScript->registerScript('filter_init', '
 function filter_pf_order_init(){
     filter_PfOrder_order_date_range_init();
     filter_PfOrder_desired_date_range_init();
-//    filter_PfOrder_planed_dispatch_date_range_init();
+    filter_PfOrder_planed_dispatch_date_range_init();
 //    filter_PfOrder_planed_delivery_date_range_init();
 }
 ');
@@ -68,18 +68,8 @@ function filter_pf_order_init(){
 <?php
 $ccuc = CcucUserCompany::model()->getPersonCompnies(
         Yii::app()->getModule('user')->user()->profile->person_id, CcucUserCompany::CCUC_STATUS_PERSON);
-$cl = [];
-foreach ($ccuc as $c) {
-    if ($c->ccuc_ccmp_id == Yii::app()->sysCompany->getActiveCompany()) {
-        continue;
-    }
-    $cl[] = $c->ccuc_ccmp_id;
-}
 
 $criteria = new CDBCriteria();
-if (!empty($cl)) {
-    $criteria->condition = "ccmp_id in (" . implode(',', $cl) . ")";
-}
 $criteria->order = 't.ccmp_name';
 
 
