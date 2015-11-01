@@ -1,7 +1,7 @@
 <?php
 
 
-class PfOrderItemsController extends Controller
+class PfOrderItemNotesController extends Controller
 {
     #public $layout='//layouts/column2';
 
@@ -23,27 +23,27 @@ public function accessRules()
         array(
             'allow',
             'actions' => array('create', 'admin', 'view', 'update', 'editableSaver', 'delete','ajaxCreate'),
-            'roles' => array('Ldm.PfOrderItems.*'),
+            'roles' => array('Ldm.PfOrderItemNotes.*'),
         ),
         array(
             'allow',
             'actions' => array('create','ajaxCreate'),
-            'roles' => array('Ldm.PfOrderItems.Create'),
+            'roles' => array('Ldm.PfOrderItemNotes.Create'),
         ),
         array(
             'allow',
             'actions' => array('view', 'admin'), // let the user view the grid
-            'roles' => array('Ldm.PfOrderItems.View'),
+            'roles' => array('Ldm.PfOrderItemNotes.View'),
         ),
         array(
             'allow',
             'actions' => array('update', 'editableSaver'),
-            'roles' => array('Ldm.PfOrderItems.Update'),
+            'roles' => array('Ldm.PfOrderItemNotes.Update'),
         ),
         array(
             'allow',
             'actions' => array('delete'),
-            'roles' => array('Ldm.PfOrderItems.Delete'),
+            'roles' => array('Ldm.PfOrderItemNotes.Delete'),
         ),
         array(
             'deny',
@@ -76,29 +76,31 @@ public function accessRules()
         }
     }
 
-    public function actionCreate($order_id)
+    public function actionCreate($order_item_id)
     {
-        $model = new PfOrderItems;
+        $model = new PfOrderItemNotes;
         $model->scenario = $this->scenario;
-        $model->order_id = $order_id;
-        $this->performAjaxValidation($model, 'pf-order-items-form');
+        $model->order_item_id = $order_item_id;
+        $model->created = new CDbExpression('NOW()');
+        $model->from_pprs_id = Yii::app()->getModule('user')->user()->profile->person_id;
+        $this->performAjaxValidation($model, 'pf-order-item-notes-form');
 
-        if (isset($_POST['PfOrderItems'])) {
-            $model->attributes = $_POST['PfOrderItems'];
+        if (isset($_POST['PfOrderItemNotes'])) {
+            $model->attributes = $_POST['PfOrderItemNotes'];
 
             try {
                 if ($model->save()) {
                     if (isset($_GET['returnUrl'])) {
                         $this->redirect($_GET['returnUrl']);
                     } else {
-                        $this->redirect(array('pfOrder/view', 'id' => $model->order_id));
+                        $this->redirect(array('pfOrder/view', 'id' => $model->orderItem->order_id));
                     }
                 }
             } catch (Exception $e) {
                 $model->addError('id', $e->getMessage());
             }
-        } elseif (isset($_GET['PfOrderItems'])) {
-            $model->attributes = $_GET['PfOrderItems'];
+        } elseif (isset($_GET['PfOrderItemNotes'])) {
+            $model->attributes = $_GET['PfOrderItemNotes'];
         }
 
         $this->render('create', array('model' => $model));
@@ -109,10 +111,10 @@ public function accessRules()
         $model = $this->loadModel($id);
         $model->scenario = $this->scenario;
 
-        $this->performAjaxValidation($model, 'pf-order-items-form');
+        $this->performAjaxValidation($model, 'pf-order-item-notes-form');
 
-        if (isset($_POST['PfOrderItems'])) {
-            $model->attributes = $_POST['PfOrderItems'];
+        if (isset($_POST['PfOrderItemNotes'])) {
+            $model->attributes = $_POST['PfOrderItemNotes'];
 
 
             try {
@@ -133,13 +135,13 @@ public function accessRules()
 
     public function actionEditableSaver()
     {
-        $es = new EditableSaver('PfOrderItems'); // classname of model to be updated
+        $es = new EditableSaver('PfOrderItemNotes'); // classname of model to be updated
         $es->update();
     }
 
     public function actionAjaxCreate($field, $value) 
     {
-        $model = new PfOrderItems;
+        $model = new PfOrderItemNotes;
         $model->$field = $value;
         try {
             if ($model->save()) {
@@ -175,15 +177,15 @@ public function accessRules()
 
     public function actionAdmin()
     {
-        $model = new PfOrderItems('search');
+        $model = new PfOrderItemNotes('search');
         $scopes = $model->scopes();
         if (isset($scopes[$this->scope])) {
             $model->{$this->scope}();
         }
         $model->unsetAttributes();
 
-        if (isset($_GET['PfOrderItems'])) {
-            $model->attributes = $_GET['PfOrderItems'];
+        if (isset($_GET['PfOrderItemNotes'])) {
+            $model->attributes = $_GET['PfOrderItemNotes'];
         }
 
         $this->render('admin', array('model' => $model));
@@ -191,7 +193,7 @@ public function accessRules()
 
     public function loadModel($id)
     {
-        $m = PfOrderItems::model();
+        $m = PfOrderItemNotes::model();
         // apply scope, if available
         $scopes = $m->scopes();
         if (isset($scopes[$this->scope])) {
@@ -206,7 +208,7 @@ public function accessRules()
 
     protected function performAjaxValidation($model)
     {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'pf-order-items-form') {
+        if (isset($_POST['ajax']) && $_POST['ajax'] === 'pf-order-item-notes-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

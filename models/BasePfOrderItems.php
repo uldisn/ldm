@@ -14,6 +14,7 @@
  * @property string $notes_admin_manufacturer
  *
  * Relations of table "pf_order_items" available as properties of the model:
+ * @property PfOrderItemNotes[] $pfOrderItemNotes
  * @property PfOrder $order
  * @property CcmpCompany $manufakturerCcmp
  */
@@ -66,6 +67,7 @@ abstract class BasePfOrderItems extends CActiveRecord
     {
         return array_merge(
             parent::relations(), array(
+                'pfOrderItemNotes' => array(self::HAS_MANY, 'PfOrderItemNotes', 'order_item_id'),
                 'order' => array(self::BELONGS_TO, 'PfOrder', 'order_id'),
                 'manufakturerCcmp' => array(self::BELONGS_TO, 'CcmpCompany', 'manufakturer_ccmp_id'),
             )
@@ -105,5 +107,20 @@ abstract class BasePfOrderItems extends CActiveRecord
         return $criteria;
 
     }
+    
+    public function delete() {
+
+        /**
+        * delete related records
+        */
+        foreach ($this->relations() as $relName => $relation) {
+            if ($relation[0] != self::HAS_MANY && $relation[0] != self::HAS_ONE) {
+                continue;
+            }
+            foreach ($this->$relName as $relRecord)
+                $relRecord->delete();
+        }
+        return parent::delete();
+    }    
 
 }
