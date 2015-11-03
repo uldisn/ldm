@@ -45,164 +45,168 @@ $cancel_buton = $this->widget("bootstrap.widgets.TbButton", [
 <div class="row">
     <div class="span5">
 
-<?php
-$this->widget(
-        'TbAceDetailView', [
-    'data' => $model,
-    'attributes' => [
+        <?php
+        $this->widget(
+                'TbAceDetailView', [
+            'data' => $model,
+            'attributes' => [
 
-        [
-            'name' => 'number',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'attribute' => 'number',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                    ], true
-            )
-        ],
-        [
-            'name' => 'client_ccmp_id',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'type' => 'select',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                'source' => CHtml::listData(CcmpCompany::model()->findAll(['limit' => 1000]), 'ccmp_id', 'itemLabel'),
-                'attribute' => 'client_ccmp_id',
-                    //'placement' => 'right',
-                    ], true
-            )
-        ],
-        [
-            'name' => 'order_date',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'type' => 'date',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                'attribute' => 'order_date',
-                    //'placement' => 'right',
-                    ], true
-            )
-        ],
-        [
-            'name' => 'desired_date',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'type' => 'date',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                'attribute' => 'desired_date',
-                    //'placement' => 'right',
-                    ], true
-            )
-        ],
-        [
-            'name' => 'planed_delivery_type',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'type' => 'select',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                'source' => CHtml::listData(PfDeliveryType::model()->findAll(['limit' => 1000]), 'id', 'itemLabel'),
-                'attribute' => 'planed_delivery_type',
-                    //'placement' => 'right',
-                    ], true
-            )
-        ],
-        [
-            'name' => 'groupage',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'attribute' => 'groupage',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                    ], true
-            )
-        ],
-        [
-            'name' => 'loading_meters',
-        ],
-        [
-            'name' => 'm3',
-        ],
-        [
-            'name' => 'planed_dispatch_date',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'type' => 'date',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                'attribute' => 'planed_dispatch_date',
-                    //'placement' => 'right',
-                    ], true
-            )
-        ],
-        [
-            'name' => 'planed_delivery_date',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'type' => 'date',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                'attribute' => 'planed_delivery_date',
-                    //'placement' => 'right',
-                    ], true
-            )
-        ],
-        [
-            'name' => 'status',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'type' => 'select',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                'source' => $model->getEnumFieldLabels('status'),
-                'attribute' => 'status',
-                    //'placement' => 'right',
-                    ], true
-            )
-        ],
-        [
-            'name' => 'loading_meters',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'attribute' => 'loading_meters',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                    ], true
-            )
-        ],
-        [
-            'name' => 'notes',
-            'type' => 'raw',
-            'value' => $this->widget(
-                    'EditableField', [
-                'model' => $model,
-                'attribute' => 'notes',
-                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-                    ], true
-            )
-        ],
-    ],
-]);
-?>
+                [
+                    'name' => 'number',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'attribute' => 'number',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'client_ccmp_id',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'type' => 'select',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                        'source' => CHtml::listData(CcmpCompany::model()->findAll(['limit' => 1000]), 'ccmp_id', 'itemLabel'),
+                        'attribute' => 'client_ccmp_id',
+                            //'placement' => 'right',
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'order_date',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'type' => 'date',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                        'attribute' => 'order_date',
+                            //'placement' => 'right',
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'desired_date',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'type' => 'date',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                        'attribute' => 'desired_date',
+                            //'placement' => 'right',
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'planed_delivery_type',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'type' => 'select',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                        'source' => CHtml::listData(PfDeliveryType::model()->findAll(['limit' => 1000]), 'id', 'itemLabel'),
+                        'attribute' => 'planed_delivery_type',
+                            //'placement' => 'right',
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'groupage',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'attribute' => 'groupage',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'loading_meters',
+                ],
+                [
+                    'name' => 'm3',
+                ],
+                [
+                    'name' => 'planed_dispatch_date',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'type' => 'date',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                        'attribute' => 'planed_dispatch_date',
+                            //'placement' => 'right',
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'planed_delivery_date',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'type' => 'date',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                        'attribute' => 'planed_delivery_date',
+                            //'placement' => 'right',
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'status',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'type' => 'select',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                        'source' => $model->getEnumFieldLabels('status'),
+                        'attribute' => 'status',
+                            //'placement' => 'right',
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'loading_meters',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'attribute' => 'loading_meters',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                            ], true
+                    )
+                ],
+                [
+                    'name' => 'notes',
+                    'type' => 'raw',
+                    'value' => $this->widget(
+                            'EditableField', [
+                        'model' => $model,
+                        'attribute' => 'notes',
+                        'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
+                            ], true
+                    )
+                ],
+            ],
+        ]);
+        ?><br/><?php
+        $this->widget('d2FilesWidget', array('module' => $this->module->id, 'model' => $model));
+        ?>
     </div>
 
 
     <div class="span7">
-        <?php $this->renderPartial('_view-relations_grids', ['modelMain' => $model, 'ajax' => false,]); ?>    </div>
+        <?php $this->renderPartial('_view-relations_grids', ['modelMain' => $model, 'ajax' => false,]); ?>    
+    </div>
 </div>
 
-        <?php echo $cancel_buton; ?>
+<?php
+echo $cancel_buton;
