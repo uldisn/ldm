@@ -24,6 +24,13 @@ $cancel_buton = $this->widget("bootstrap.widgets.TbButton", [
         </div>
         <div class="btn-group">
             <?php
+            if (Yii::app()->user->checkAccess("audittrail")) {
+                Yii::import('audittrail.*');
+                $this->widget("vendor.dbrisinajumi.audittrail.widgets.AudittrailViewTbButton", [
+                    'model_name' => get_class($model),
+                    'model_id' => $model->getPrimaryKey(),
+                ]);
+            }
             $this->widget("bootstrap.widgets.TbButton", [
                 "label" => Yii::t("LdmModule.crud", "Delete"),
                 "type" => "danger",
@@ -198,7 +205,7 @@ $cancel_buton = $this->widget("bootstrap.widgets.TbButton", [
             ],
         ]);
         ?><br/><?php
-        $this->widget('d2FilesWidget', array('module' => $this->module->id, 'model' => $model));
+        $this->widget('d2FilesWidget', ['module' => $this->module->id, 'model' => $model]);
         ?>
     </div>
 

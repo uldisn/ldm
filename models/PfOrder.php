@@ -18,17 +18,14 @@ class PfOrder extends BasePfOrder {
         return parent::model($className);
     }
 
-    public function init() {
-        return parent::init();
-    }
-
-    public function getItemLabel() {
-        return parent::getItemLabel();
-    }
-
     public function behaviors() {
         return array_merge(
-                parent::behaviors(), []
+            parent::behaviors(), 	
+            [
+                'LoggableBehavior'=> [
+                    'class' => 'audittrail.behaviors.LoggableBehavior',
+                ],
+            ]
         );
     }
 
@@ -127,10 +124,10 @@ class PfOrder extends BasePfOrder {
         
         return new CActiveDataProvider(get_class($this), [
             'criteria' => $criteria,
-            'pagination' => array('pageSize' => 25),
-            'sort'=>array(
+            'pagination' => ['pageSize' => 25],
+            'sort'=>[
                 'defaultOrder'=>'week_number DESC',
-            ),            
+            ],            
         ]);
     }
 
