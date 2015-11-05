@@ -7,6 +7,7 @@
  * @property integer $id
  * @property string $name
  * @property string $load_meters
+ * @property string $cubic_meters
  *
  * Relations of table "pf_delivery_type" available as properties of the model:
  * @property PfOrder[] $pfOrders
@@ -29,11 +30,11 @@ abstract class BasePfDeliveryType extends CActiveRecord
         return array_merge(
             parent::rules(), array(
                 array('name', 'required'),
-                array('load_meters', 'default', 'setOnEmpty' => true, 'value' => null),
-                array('load_meters', 'type','type'=>'float'),
+                array('load_meters, cubic_meters', 'default', 'setOnEmpty' => true, 'value' => null),
+                array('load_meters, cubic_meters', 'type','type'=>'float'),
                 array('name', 'length', 'max' => 20),
-                array('load_meters', 'length', 'max' => 11),
-                array('id, name, load_meters', 'safe', 'on' => 'search'),
+                array('load_meters, cubic_meters', 'length', 'max' => 11),
+                array('id, name, load_meters, cubic_meters', 'safe', 'on' => 'search'),
             )
         );
     }
@@ -69,6 +70,7 @@ abstract class BasePfDeliveryType extends CActiveRecord
             'id' => Yii::t('LdmModule.model', 'ID'),
             'name' => Yii::t('LdmModule.model', 'Delivery type'),
             'load_meters' => Yii::t('LdmModule.model', 'Load meters'),
+            'cubic_meters' => Yii::t('LdmModule.model', 'Cubic Meters'),
         );
     }
 
@@ -81,10 +83,26 @@ abstract class BasePfDeliveryType extends CActiveRecord
         $criteria->compare('t.id', $this->id);
         $criteria->compare('t.name', $this->name, true);
         $criteria->compare('t.load_meters', $this->load_meters, true);
+        $criteria->compare('t.cubic_meters', $this->cubic_meters, true);
 
 
         return $criteria;
 
     }
+    
+    public function delete() {
+
+        /**
+        * delete related records
+        */
+        foreach ($this->relations() as $relName => $relation) {
+            if ($relation[0] != self::HAS_MANY && $relation[0] != self::HAS_ONE) {
+                continue;
+            }
+            foreach ($this->$relName as $relRecord)
+                $relRecord->delete();
+        }
+        return parent::delete();
+    }    
 
 }

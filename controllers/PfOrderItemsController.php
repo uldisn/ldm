@@ -1,83 +1,74 @@
 <?php
 
-
-class PfOrderItemsController extends Controller
-{
+class PfOrderItemsController extends Controller {
     #public $layout='//layouts/column2';
 
     public $defaultAction = "admin";
     public $scenario = "crud";
     public $scope = "crud";
 
+    public function filters() {
+        return [
+            'accessControl',
+        ];
+    }
 
-public function filters()
-{
-    return array(
-        'accessControl',
-    );
-}
+    public function accessRules() {
+        return [
+            [
+                'allow',
+                'actions' => ['create', 'admin', 'view', 'update', 'editableSaver', 'delete', 'ajaxCreate'],
+                'roles' => ['Ldm.PfOrderItems.*'],
+            ],
+            [
+                'allow',
+                'actions' => ['create', 'ajaxCreate'],
+                'roles' => ['Ldm.PfOrderItems.Create'],
+            ],
+            [
+                'allow',
+                'actions' => ['view', 'admin'], // let the user view the grid
+                'roles' => ['Ldm.PfOrderItems.View'],
+            ],
+            [
+                'allow',
+                'actions' => ['update', 'editableSaver'],
+                'roles' => ['Ldm.PfOrderItems.Update'],
+            ],
+            [
+                'allow',
+                'actions' => ['delete'],
+                'roles' => ['Ldm.PfOrderItems.Delete'],
+            ],
+            [
+                'deny',
+                'users' => ['*'],
+            ],
+        ];
+    }
 
-public function accessRules()
-{
-     return array(
-        array(
-            'allow',
-            'actions' => array('create', 'admin', 'view', 'update', 'editableSaver', 'delete','ajaxCreate'),
-            'roles' => array('Ldm.PfOrderItems.*'),
-        ),
-        array(
-            'allow',
-            'actions' => array('create','ajaxCreate'),
-            'roles' => array('Ldm.PfOrderItems.Create'),
-        ),
-        array(
-            'allow',
-            'actions' => array('view', 'admin'), // let the user view the grid
-            'roles' => array('Ldm.PfOrderItems.View'),
-        ),
-        array(
-            'allow',
-            'actions' => array('update', 'editableSaver'),
-            'roles' => array('Ldm.PfOrderItems.Update'),
-        ),
-        array(
-            'allow',
-            'actions' => array('delete'),
-            'roles' => array('Ldm.PfOrderItems.Delete'),
-        ),
-        array(
-            'deny',
-            'users' => array('*'),
-        ),
-    );
-}
-
-    public function beforeAction($action)
-    {
+    public function beforeAction($action) {
         parent::beforeAction($action);
         if ($this->module !== null) {
-            $this->breadcrumbs[$this->module->Id] = array('/' . $this->module->Id);
+            $this->breadcrumbs[$this->module->Id] = ['/' . $this->module->Id];
         }
         return true;
     }
 
-    public function actionView($id, $ajax = false)
-    {
+    public function actionView($id, $ajax = false) {
         $model = $this->loadModel($id);
-        if($ajax){
-            $this->renderPartial('_view-relations_grids', 
-                    array(
-                        'modelMain' => $model,
-                        'ajax' => $ajax,
-                        )
-                    );
-        }else{
-            $this->render('view', array('model' => $model,));
+        if ($ajax) {
+            $this->renderPartial('_view-relations_grids', [
+                'modelMain' => $model,
+                'ajax' => $ajax,
+                    ]
+            );
+        } else {
+            $this->render('view', ['model' => $model,]);
         }
     }
 
-    public function actionCreate($order_id)
-    {
+    public function actionCreate($order_id) {
         $model = new PfOrderItems;
         $model->scenario = $this->scenario;
         $model->order_id = $order_id;
@@ -91,7 +82,7 @@ public function accessRules()
                     if (isset($_GET['returnUrl'])) {
                         $this->redirect($_GET['returnUrl']);
                     } else {
-                        $this->redirect(array('pfOrder/view', 'id' => $model->order_id));
+                        $this->redirect(['pfOrder/view', 'id' => $model->order_id]);
                     }
                 }
             } catch (Exception $e) {
@@ -101,11 +92,10 @@ public function accessRules()
             $model->attributes = $_GET['PfOrderItems'];
         }
 
-        $this->render('create', array('model' => $model));
+        $this->render('create', ['model' => $model]);
     }
 
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->loadModel($id);
         $model->scenario = $this->scenario;
 
@@ -120,7 +110,7 @@ public function accessRules()
                     if (isset($_GET['returnUrl'])) {
                         $this->redirect($_GET['returnUrl']);
                     } else {
-                        $this->redirect(array('view', 'id' => $model->id));
+                        $this->redirect(['view', 'id' => $model->id]);
                     }
                 }
             } catch (Exception $e) {
@@ -128,53 +118,42 @@ public function accessRules()
             }
         }
 
-        $this->render('update', array('model' => $model));
+        $this->render('update', ['model' => $model]);
     }
 
-    public function actionEditableSaver()
-    {
+    public function actionEditableSaver() {
         $es = new EditableSaver('PfOrderItems'); // classname of model to be updated
         $es->update();
     }
 
-    public function actionAjaxCreate($field, $value) 
-    {
+    public function actionAjaxCreate($field, $value) {
         $model = new PfOrderItems;
         $model->$field = $value;
         try {
             if ($model->save()) {
                 return TRUE;
-            }else{
+            } else {
                 return var_export($model->getErrors());
-            }            
+            }
         } catch (Exception $e) {
             throw new CHttpException(500, $e->getMessage());
         }
     }
-    
-    public function actionDelete($id)
-    {
-        if (Yii::app()->request->isPostRequest) {
-            try {
-                $this->loadModel($id)->delete();
-            } catch (Exception $e) {
-                throw new CHttpException(500, $e->getMessage());
-            }
 
-            if (!isset($_GET['ajax'])) {
-                if (isset($_GET['returnUrl'])) {
-                    $this->redirect($_GET['returnUrl']);
-                } else {
-                    $this->redirect(array('admin'));
-                }
-            }
-        } else {
-            throw new CHttpException(400, Yii::t('LdmModule.crud', 'Invalid request. Please do not repeat this request again.'));
+    public function actionDelete($id) {
+
+        $model = $this->loadModel($id);
+        $order_id = $model->order_id;
+        try {
+
+            $model->delete();
+            $this->redirect(['pfOrder/view', 'id' => $order_id]);
+        } catch (Exception $e) {
+            throw new CHttpException(500, $e->getMessage());
         }
     }
 
-    public function actionAdmin()
-    {
+    public function actionAdmin() {
         $model = new PfOrderItems('search');
         $scopes = $model->scopes();
         if (isset($scopes[$this->scope])) {
@@ -186,11 +165,10 @@ public function accessRules()
             $model->attributes = $_GET['PfOrderItems'];
         }
 
-        $this->render('admin', array('model' => $model));
+        $this->render('admin', ['model' => $model]);
     }
 
-    public function loadModel($id)
-    {
+    public function loadModel($id) {
         $m = PfOrderItems::model();
         // apply scope, if available
         $scopes = $m->scopes();
@@ -204,8 +182,7 @@ public function accessRules()
         return $model;
     }
 
-    protected function performAjaxValidation($model)
-    {
+    protected function performAjaxValidation($model) {
         if (isset($_POST['ajax']) && $_POST['ajax'] === 'pf-order-items-form') {
             echo CActiveForm::validate($model);
             Yii::app()->end();

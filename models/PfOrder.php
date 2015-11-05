@@ -11,6 +11,11 @@ class PfOrder extends BasePfOrder {
     public $desired_date_range;
     public $planed_dispatch_date_range;
     public $planed_delivery_date_range;
+    
+    public $max_load_meters;
+    public $max_cubic_meters;
+
+
     private $_userPersonCompanies = false;
 
     // Add your model-specific methods here. This file will not be overriden by gtc except you force it.
@@ -67,6 +72,13 @@ class PfOrder extends BasePfOrder {
         
         $criteria->distinct = true;
         $criteria->select = 't.*';
+
+        $criteria->join .= "  
+            LEFT OUTER JOIN pf_delivery_type 
+                ON t.planed_delivery_type = pf_delivery_type.id   
+        ";
+        
+        $criteria->select .= ', pf_delivery_type.load_meters max_load_meters, pf_delivery_type.cubic_meters max_cubic_meters';        
         
         /**
          * filtrs klientiem un pircejiem 
@@ -84,10 +96,11 @@ class PfOrder extends BasePfOrder {
                 $cl = ['0'];
             }
             
-            $criteria->join = "  
+            $criteria->join .= "  
                 LEFT OUTER JOIN pf_order_items items 
                     ON t.id = items.order_id 
             ";
+        
             $criteria->condition = "
                        t.client_ccmp_id           in (" . implode(',', $cl) . ") "      //orders ir usera kompānija
                     . " or items.manufakturer_ccmp_id in (" . implode(',', $cl) . ") "  //itema ražotājs ir user kompānija
