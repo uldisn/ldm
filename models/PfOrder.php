@@ -11,6 +11,7 @@ class PfOrder extends BasePfOrder {
     public $desired_date_range;
     public $planed_dispatch_date_range;
     public $planed_delivery_date_range;
+    public $manufakturer;
     
     public $max_load_meters;
     public $max_cubic_meters;
@@ -42,7 +43,8 @@ class PfOrder extends BasePfOrder {
                     planed_delivery_type, groupage, planed_dispatch_date, 
                     planed_delivery_date, status, loading_meters, m3, 
                     notes, week_number, order_date_range, desired_date_range,
-                    planed_dispatch_date_range,planed_delivery_date_range', 'safe', 'on' => 'search'],
+                    planed_dispatch_date_range,planed_delivery_date_range,
+                    manufakturer', 'safe', 'on' => 'search'],
                 ]
         );
     }
@@ -50,7 +52,10 @@ class PfOrder extends BasePfOrder {
     public function attributeLabels() {
         return array_merge(
                 parent::attributeLabels(), [
-            [ 'week_number' => Yii::t('LdmModule.model', 'Week Number'),]
+            [ 
+                'week_number' => Yii::t('LdmModule.model', 'Week Number'),
+                'manufakturer' => Yii::t('LdmModule.model', 'Manufakturer'),
+                ]
                 ]
         );
     }
@@ -70,7 +75,7 @@ class PfOrder extends BasePfOrder {
         }
         $criteria = $this->searchCriteria($criteria);
         
-        $criteria->distinct = true;
+
         $criteria->select = 't.*';
 
         $criteria->join .= "  
@@ -79,7 +84,12 @@ class PfOrder extends BasePfOrder {
         ";
         
         $criteria->select .= ', pf_delivery_type.load_meters max_load_meters, pf_delivery_type.cubic_meters max_cubic_meters';        
+
         
+        $criteria->join .= "  
+            LEFT OUTER JOIN pf_order_items items 
+                ON t.id = items.order_id 
+        ";        
         /**
          * filtrs klientiem un pircejiem 
          * orderam vai itemam jabut savas kompanijas
@@ -95,11 +105,6 @@ class PfOrder extends BasePfOrder {
             if (count($cl) == 0) {
                 $cl = ['0'];
             }
-            
-            $criteria->join .= "  
-                LEFT OUTER JOIN pf_order_items items 
-                    ON t.id = items.order_id 
-            ";
         
             $criteria->condition = "
                        t.client_ccmp_id           in (" . implode(',', $cl) . ") "      //orders ir usera kompānija
@@ -112,13 +117,28 @@ class PfOrder extends BasePfOrder {
          */
         $criteria->select .= ",concat(YEAR(planed_dispatch_date),'/',WEEK(planed_dispatch_date,1)) week_number";
         $criteria->compare("concat(YEAR(planed_dispatch_date),'/',WEEK(planed_dispatch_date,1))", $this->week_number, true);
-//planed_dispatch_date_range,planed_delivery_date_range
 
+        /**
+         * manufakturer
+         */
+        $criteria->select .= ",GROUP_CONCAT(DISTINCT ccmp.ccmp_name SEPARATOR  '<BR/>') manufakturer";
+        $criteria->join .= "  
+            LEFT OUTER JOIN ccmp_company ccmp 
+                ON items.manufakturer_ccmp_id = ccmp.ccmp_id 
+        ";
+        $criteria->compare("ccmp.ccmp_name", $this->manufakturer, true);
+        
+        /**
+         * order_date_range
+         */
         if (!empty($this->order_date_range)) {
             $criteria->AddCondition("t.order_date >= '" . substr($this->order_date_range, 0, 10) . "'");
             $criteria->AddCondition("t.order_date <= '" . substr($this->order_date_range, -10) . "'");
         }
 
+        /**
+         * desired_date_range
+         */
         if (!empty($this->desired_date_range)) {
             $criteria->AddCondition("t.desired_date >= '" . substr($this->desired_date_range, 0, 10) . "'");
             $criteria->AddCondition("t.desired_date <= '" . substr($this->desired_date_range, -10) . "'");
@@ -134,6 +154,7 @@ class PfOrder extends BasePfOrder {
             $criteria->AddCondition("t.planed_delivery_date <= '" . substr($this->planed_delivery_date_range, -10) . "'");
         }
 
+        $criteria->group = 't.id';
         
         return new CActiveDataProvider(get_class($this), [
             'criteria' => $criteria,

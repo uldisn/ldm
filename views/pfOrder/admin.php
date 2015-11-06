@@ -107,7 +107,7 @@ $this->widget('TbGridView', [
     'rowCssClassExpression' => '
 
         ( $data->status==PfOrder::STATUS_DELIVERED ? " delivered": null )
-    ',    
+    ',
     'pager' => [
         'class' => 'TbPager',
         'displayFirstAndLast' => true,
@@ -115,7 +115,7 @@ $this->widget('TbGridView', [
     'columns' => [
         [
             'name' => 'week_number',
-        ],        
+        ],
         [
             //varchar(20)
             'name' => 'number',
@@ -124,6 +124,10 @@ $this->widget('TbGridView', [
             'name' => 'client_ccmp_id',
             'value' => '$data->clientCcmp?$data->clientCcmp->ccmp_name:""',
             'filter' => $filterCcmp,
+        ],
+        [
+            'name' => 'manufakturer',
+            'type' => 'raw',
         ],
         [
             'name' => 'order_date',
@@ -153,7 +157,6 @@ $this->widget('TbGridView', [
         [
             'name' => 'groupage'
         ],
-
 //        [
 //            'name' => 'planed_dispatch_date',
 //            'filter' => $this->widget('vendor.dbrisinajumi.DbrLib.widgets.TbFilterDateRangePicker', [
@@ -188,7 +191,7 @@ $this->widget('TbGridView', [
         [
             'name' => 'm3',
             'value' => "\$data->m3>\$data->max_cubic_meters?'<span class=\"label label-important\">'.\$data->m3.'</span>':\$data->m3",
-            'type' => 'raw',            
+            'type' => 'raw',
         ],
         [
 //            'class' => 'editable.EditableColumn',
@@ -210,7 +213,7 @@ $this->widget('TbGridView', [
             //'deleteButtonUrl' => 'Yii::app()->controller->createUrl("delete", array("id" => $data->id))',
             'deleteConfirmation' => Yii::t('LdmModule.crud', 'Do you want to delete this item?'),
             'viewButtonOptions' => ['data-toggle' => 'tooltip'],
-            //'deleteButtonOptions' => ['data-toggle' => 'tooltip'],
+        //'deleteButtonOptions' => ['data-toggle' => 'tooltip'],
         ],
     ]
         ]
