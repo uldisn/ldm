@@ -128,6 +128,7 @@ $this->widget('TbGridView', [
         [
             'name' => 'manufakturer',
             'type' => 'raw',
+            'visible' => Yii::app()->user->checkAccess('OrdersAdmin'),
         ],
         [
             'name' => 'order_date',
