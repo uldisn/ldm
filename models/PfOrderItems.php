@@ -53,13 +53,13 @@ class PfOrderItems extends BasePfOrderItems {
                 INNER JOIN pf_order o 
                     ON o.id = t.order_id 
             ";
-            $criteria->condition .= "
+            $criteria->addCondition(" 
                     (
                     o.client_ccmp_id IN (" . implode(',', $cl) . ") 
                     OR t.manufakturer_ccmp_id IN (" . implode(',', $cl) . ")
                     OR t.manufakturer_ccmp_id IS NULL    
                     )
-                    ";
+                    ");
         }
         $criteria = $this->searchCriteria($criteria);
 

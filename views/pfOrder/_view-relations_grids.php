@@ -22,9 +22,9 @@ $addButton = $this->widget(
         ], true
 );
 
-
-$modelOrderItems = new PfOrderItems();
-$orderItems = $modelOrderItems->findAllByAttributes(['order_id' => $modelMain->primaryKey]);
+$criteria = new CDbCriteria;
+$criteria->compare('order_id', $modelMain->primaryKey);
+$orderItems = PfOrderItems::model()->searchClient($criteria)->getData();
 
 $boxTable = $this->renderPartial('_box_table', ['orderItems' => $orderItems], true);
 $this->widget('AceBoxTable', array(
