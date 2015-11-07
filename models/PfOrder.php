@@ -6,6 +6,8 @@ Yii::import('PfOrder.*');
 
 class PfOrder extends BasePfOrder {
 
+    static $lists;
+    
     public $week_number;
     public $order_date_range;
     public $desired_date_range;

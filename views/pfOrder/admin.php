@@ -1,43 +1,4 @@
 <?php
-//Yii::app()->clientScript->registerCss('hide_for_print', "
-//   
-//@media print {
-//	.btn {
-//		display: none !important;
-//	}
-//
-//	#navbar {
-//		display: none !important;
-//	}
-//
-//	#sidebar {
-//		display: none !important;
-//	}
-//
-//
-//	.button-column {
-//		display: none !important;
-//	}
-//    
-//	.main-content{
-//		margin-left: 0px !important;
-//	}
-//    
-//    .editable-click, a.editable-click {
-//        border-bottom: none !important;
-//    }
-//    
-//    #pf-order-grid tr.filters{
-//		display: none !important;
-//	}
-//    
-//    div.pagination{
-//		display: none !important;
-//	}
-//
-//    a[href]:after{content:none} 
-//}
-//");
 Yii::app()->clientScript->registerCss('table_css', "
 
 .delivered {
@@ -79,6 +40,9 @@ function filter_pf_order_init(){
                 <?php echo Yii::t('LdmModule.model', 'Orders'); ?>            
             </h1>
         </div>
+        <div class="btn-group">
+               <?php echo CHtml::link('<img src="images/excel48.png">', array('exportExcel', 'lang' => Yii::app()->language)); ?>   
+        </div>        
     </div>
 </div>
 
@@ -89,13 +53,10 @@ $ccuc = CcucUserCompany::model()->getPersonCompnies(
 $criteria = new CDBCriteria();
 $criteria->order = 't.ccmp_name';
 
-
-$filterCcmp = CHtml::listData(CcmpCompany::model()->findAll($criteria), 'ccmp_id', 'ccmp_name');
-
+PfOrder::$lists['ccmp'] = CHtml::listData(CcmpCompany::model()->findAll($criteria), 'ccmp_id', 'ccmp_name');
 $criteria = new CDBCriteria();
 $criteria->order = 't.name';
 $filterType = CHtml::listData(PfDeliveryType::model()->findAll($criteria), 'id', 'name');
-//PfOrder::STATUS_DELIVERED
 Yii::beginProfile('PfOrder.view.grid');
 $this->widget('TbGridView', [
     'id' => 'pf-order-grid',
@@ -122,8 +83,8 @@ $this->widget('TbGridView', [
         ],
         [
             'name' => 'client_ccmp_id',
-            'value' => '$data->clientCcmp?$data->clientCcmp->ccmp_name:""',
-            'filter' => $filterCcmp,
+            'value' => '$data->clientCcmp?PfOrder::$lists["ccmp"][$data->client_ccmp_id]:""',
+            'filter' => PfOrder::$lists['ccmp'],
         ],
         [
             'name' => 'manufakturer',
@@ -156,7 +117,7 @@ $this->widget('TbGridView', [
 //            'filter' => $filterType,
 //        ],
         [
-            'name' => 'groupage'
+            'name' => 'groupage',
         ],
 //        [
 //            'name' => 'planed_dispatch_date',
