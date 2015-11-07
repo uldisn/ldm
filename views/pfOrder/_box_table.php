@@ -1,5 +1,6 @@
 <?php
 $ccmpList = CHtml::listData(CcmpCompany::model()->findAll(array('order' => 'ccmp_name')), 'ccmp_id', 'itemLabel');
+pfOrder::$lists['pprs'] = CHtml::listData(PprsPerson::model()->findAll(), 'pprs_id', 'itemLabel');
 foreach ($orderItems as $item) {
     ?>
     <tr>

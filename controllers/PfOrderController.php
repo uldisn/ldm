@@ -21,7 +21,7 @@ class PfOrderController extends Controller {
                 'actions' => [
                     'create', 'admin', 'view', 'update', 
                     'editableSaver', 'delete', 'ajaxCreate',
-                    'exportExcel'
+                    'adminExcel','viewExcel'
                     ],
                 'roles' => ['Ldm.PfOrder.*'],
             ],
@@ -32,7 +32,7 @@ class PfOrderController extends Controller {
             ],
             [
                 'allow',
-                'actions' => ['view', 'admin','exportExcel'], // let the user view the grid
+                'actions' => ['view', 'admin','adminExcel'], // let the user view the grid
                 'roles' => ['Ldm.PfOrder.View'],
             ],
             [
@@ -71,6 +71,11 @@ class PfOrderController extends Controller {
         } else {
             $this->render('view', ['model' => $model,]);
         }
+    }
+
+    public function actionViewExcel($id) {
+        $model = $this->loadModel($id);
+        $this->render('viewExcel', ['model' => $model,]);
     }
 
     public function actionCreate() {
@@ -180,7 +185,7 @@ class PfOrderController extends Controller {
         $this->render('admin', ['model' => $model]);
     }
 
-    public function actionExportExcel() {
+    public function actionAdminExcel() {
 
         $model = new PfOrder('search');
         $scopes = $model->scopes();

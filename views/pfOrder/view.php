@@ -31,6 +31,9 @@ $cancel_buton = $this->widget("bootstrap.widgets.TbButton", [
                     'model_id' => $model->getPrimaryKey(),
                 ]);
             }
+
+            echo CHtml::link('<img src="images/excel48.png">', array('viewExcel', 'id' => $model->id, 'lang' => Yii::app()->language));
+
             $this->widget("bootstrap.widgets.TbButton", [
                 "label" => Yii::t("LdmModule.crud", "Delete"),
                 "type" => "danger",
