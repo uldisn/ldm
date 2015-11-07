@@ -211,10 +211,13 @@ $this->widget('TbGridView', [
                 'delete' => ['visible' => 'FALSE'],
             ],
             'viewButtonUrl' => 'Yii::app()->controller->createUrl("view", array("id" => $data->id))',
-            //'deleteButtonUrl' => 'Yii::app()->controller->createUrl("delete", array("id" => $data->id))',
+            'viewButtonIcon' => 'icon-edit',
             'deleteConfirmation' => Yii::t('LdmModule.crud', 'Do you want to delete this item?'),
-            'viewButtonOptions' => ['data-toggle' => 'tooltip'],
-        //'deleteButtonOptions' => ['data-toggle' => 'tooltip'],
+            'viewButtonOptions' => [
+                'data-toggle' => 'tooltip',
+                'title' => Yii::t("LdmModule.crud", "View & Edit"),
+                
+            ],
         ],
     ]
         ]

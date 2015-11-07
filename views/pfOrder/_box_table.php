@@ -74,7 +74,7 @@ foreach ($orderItems as $item) {
                     'id' => $item->primaryKey,
                 ],
                 'htmlOptions' => [
-                    'title' => Yii::t('LdmModule.crud', 'Add new Message'),
+                    'title' => Yii::t('LdmModule.crud', 'Delete Item'),
                     'data-toggle' => 'tooltip',
                 ],
                     ]
@@ -97,7 +97,7 @@ foreach ($orderItems as $item) {
                     'order_item_id' => $item->primaryKey,
                 ],
                 'htmlOptions' => [
-                    'title' => Yii::t('LdmModule.crud', 'Add new Message'),
+                    'title' => Yii::t('LdmModule.crud', 'Add new Note'),
                     'data-toggle' => 'tooltip',
                 ],
                     ], true
