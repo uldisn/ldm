@@ -13,7 +13,7 @@ Yii::app()->clientScript->registerScript('filter_init', '
 function filter_pf_order_init(){
     filter_PfOrder_order_date_range_init();
     filter_PfOrder_desired_date_range_init();
-    filter_PfOrder_planed_dispatch_date_range_init();
+//    filter_PfOrder_planed_dispatch_date_range_init();
 //    filter_PfOrder_planed_delivery_date_range_init();
 }
 ');
@@ -50,13 +50,15 @@ function filter_pf_order_init(){
 $ccuc = CcucUserCompany::model()->getPersonCompnies(
         Yii::app()->getModule('user')->user()->profile->person_id, CcucUserCompany::CCUC_STATUS_PERSON);
 
+
+
 $criteria = new CDBCriteria();
 $criteria->order = 't.ccmp_name';
-
-PfOrder::$lists['ccmp'] = CHtml::listData(CcmpCompany::model()->findAll($criteria), 'ccmp_id', 'ccmp_name');
+pfOrder::$lists['ccmp'] = CHtml::listData(CcmpCompany::model()->findAll($criteria), 'ccmp_id', 'ccmp_name');
 $criteria = new CDBCriteria();
 $criteria->order = 't.name';
 $filterType = CHtml::listData(PfDeliveryType::model()->findAll($criteria), 'id', 'name');
+
 Yii::beginProfile('PfOrder.view.grid');
 $this->widget('TbGridView', [
     'id' => 'pf-order-grid',
@@ -149,20 +151,20 @@ $this->widget('TbGridView', [
             'name' => 'loading_meters',
             'value' => "\$data->loading_meters>\$data->max_load_meters?'<span class=\"label label-important\">'.\$data->loading_meters.'</span>':\$data->loading_meters",
             'type' => 'raw',
+            'htmlOptions' => [
+                'class' => 'numeric-column',
+        ],
         ],
         [
             'name' => 'm3',
             'value' => "\$data->m3>\$data->max_cubic_meters?'<span class=\"label label-important\">'.\$data->m3.'</span>':\$data->m3",
             'type' => 'raw',
+            'htmlOptions' => [
+                'class' => 'numeric-column',
+        ],
         ],
         [
-//            'class' => 'editable.EditableColumn',
             'name' => 'notes',
-//            'editable' => [
-//                'type' => 'textarea',
-//                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-//            //'placement' => 'right',
-//            ]
         ],
         [
             'class' => 'TbButtonColumn',
@@ -177,7 +179,6 @@ $this->widget('TbGridView', [
             'viewButtonOptions' => [
                 'data-toggle' => 'tooltip',
                 'title' => Yii::t("LdmModule.crud", "View & Edit"),
-                
             ],
         ],
     ]
