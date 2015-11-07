@@ -52,7 +52,7 @@ Yii::app()->clientScript->registerScript('filter_init', '
 function filter_pf_order_init(){
     filter_PfOrder_order_date_range_init();
     filter_PfOrder_desired_date_range_init();
-    filter_PfOrder_planed_dispatch_date_range_init();
+//    filter_PfOrder_planed_dispatch_date_range_init();
 //    filter_PfOrder_planed_delivery_date_range_init();
 }
 ');
@@ -79,6 +79,9 @@ function filter_pf_order_init(){
                 <?php echo Yii::t('LdmModule.model', 'Orders'); ?>            
             </h1>
         </div>
+        <div class="btn-group">
+               <?php echo CHtml::link('<img src="images/excel48.png">', array('export', 'lang' => Yii::app()->language)); ?>   
+        </div>        
     </div>
 </div>
 
@@ -188,20 +191,20 @@ $this->widget('TbGridView', [
             'name' => 'loading_meters',
             'value' => "\$data->loading_meters>\$data->max_load_meters?'<span class=\"label label-important\">'.\$data->loading_meters.'</span>':\$data->loading_meters",
             'type' => 'raw',
+            'htmlOptions' => [
+                'class' => 'numeric-column',
+            ],
         ],
         [
             'name' => 'm3',
             'value' => "\$data->m3>\$data->max_cubic_meters?'<span class=\"label label-important\">'.\$data->m3.'</span>':\$data->m3",
             'type' => 'raw',
+            'htmlOptions' => [
+                'class' => 'numeric-column',
+            ],
         ],
         [
-//            'class' => 'editable.EditableColumn',
             'name' => 'notes',
-//            'editable' => [
-//                'type' => 'textarea',
-//                'url' => $this->createUrl('/ldm/pfOrder/editableSaver'),
-//            //'placement' => 'right',
-//            ]
         ],
         [
             'class' => 'TbButtonColumn',
@@ -216,7 +219,6 @@ $this->widget('TbGridView', [
             'viewButtonOptions' => [
                 'data-toggle' => 'tooltip',
                 'title' => Yii::t("LdmModule.crud", "View & Edit"),
-                
             ],
         ],
     ]
