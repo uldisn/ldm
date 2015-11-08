@@ -14,6 +14,7 @@ class PfOrder extends BasePfOrder {
     public $planed_dispatch_date_range;
     public $planed_delivery_date_range;
     public $manufakturer;
+    public $new_notes;
     
     public $max_load_meters;
     public $max_cubic_meters;
@@ -57,6 +58,7 @@ class PfOrder extends BasePfOrder {
             [ 
                 'week_number' => Yii::t('LdmModule.model', 'Week Number'),
                 'manufakturer' => Yii::t('LdmModule.model', 'Manufakturer'),
+                'new_notes' => Yii::t('LdmModule.model', 'New Notes'),
                 ]
                 ]
         );
@@ -76,7 +78,8 @@ class PfOrder extends BasePfOrder {
             $criteria = new CDbCriteria;
         }
         $criteria = $this->searchCriteria($criteria);
-        
+
+        $userPersonId = Yii::app()->getModule('user')->user()->profile->person_id;        
 
         $criteria->select = 't.*';
 
@@ -85,12 +88,26 @@ class PfOrder extends BasePfOrder {
                 ON t.planed_delivery_type = pf_delivery_type.id   
         ";
         
-        $criteria->select .= ', pf_delivery_type.load_meters max_load_meters, pf_delivery_type.cubic_meters max_cubic_meters';        
+        $criteria->select .= ', 
+            pf_delivery_type.load_meters max_load_meters, 
+            pf_delivery_type.cubic_meters max_cubic_meters,
+            SUM(
+                CASE 
+                    WHEN 
+                        note.to_pprs_id = '.$userPersonId.' 
+                        AND note.readed IS NULL
+                    THEN 1
+                    ELSE 0
+                END
+            ) new_notes
+            ';        
 
         
         $criteria->join .= "  
             LEFT OUTER JOIN pf_order_items items 
                 ON t.id = items.order_id 
+            LEFT OUTER JOIN pf_order_item_notes note
+                ON items.id = note.order_item_id                 
         ";        
         /**
          * filtrs klientiem un pircejiem 

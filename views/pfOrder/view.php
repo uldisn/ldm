@@ -53,7 +53,7 @@ $cancel_buton = $this->widget("bootstrap.widgets.TbButton", [
 
 
 <div class="row">
-    <div class="span5">
+    <div class="span3">
 
         <?php
         $this->widget(
@@ -213,7 +213,7 @@ $cancel_buton = $this->widget("bootstrap.widgets.TbButton", [
     </div>
 
 
-    <div class="span7">
+    <div class="span9">
         <?php $this->renderPartial('_view-relations_grids', ['modelMain' => $model, 'ajax' => false,]); ?>    
     </div>
 </div>

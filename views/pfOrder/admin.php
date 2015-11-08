@@ -41,7 +41,7 @@ function filter_pf_order_init(){
             </h1>
         </div>
         <div class="btn-group">
-               <?php echo CHtml::link('<img src="images/excel48.png">', array('adminExcel', 'lang' => Yii::app()->language)); ?>   
+            <?php echo CHtml::link('<img src="images/excel48.png">', array('adminExcel', 'lang' => Yii::app()->language)); ?>   
         </div>        
     </div>
 </div>
@@ -153,7 +153,7 @@ $this->widget('TbGridView', [
             'type' => 'raw',
             'htmlOptions' => [
                 'class' => 'numeric-column',
-        ],
+            ],
         ],
         [
             'name' => 'm3',
@@ -161,10 +161,24 @@ $this->widget('TbGridView', [
             'type' => 'raw',
             'htmlOptions' => [
                 'class' => 'numeric-column',
-        ],
+            ],
         ],
         [
             'name' => 'notes',
+        ],
+        [
+            'name' => 'new_notes',
+            'type' => 'raw',
+            'value' => '$data->new_notes > 0 ?
+                \'
+                <a href="#"> 
+                    <i class="icon-envelope icon-primary"></i>
+                    <span class="badge badge-warning">\' . $data->new_notes . \'</span>
+                </a>
+                \'
+                :
+                \'\'
+                ',
         ],
         [
             'class' => 'TbButtonColumn',

@@ -12,51 +12,57 @@ class PfOrderItemNotesController extends Controller
 
 public function filters()
 {
-    return array(
+    return [
         'accessControl',
-    );
+    ];
 }
 
 public function accessRules()
 {
-     return array(
-        array(
+     return [
+        [
             'allow',
-            'actions' => array('create', 'admin', 'view', 'update', 'editableSaver', 'delete','ajaxCreate'),
-            'roles' => array('Ldm.PfOrderItemNotes.*'),
-        ),
-        array(
+            'actions' => ['markAsRead'],
+            'users' => ['@'],
+        ], 
+        [
             'allow',
-            'actions' => array('create','ajaxCreate'),
-            'roles' => array('Ldm.PfOrderItemNotes.Create'),
-        ),
-        array(
+            'actions' => ['create', 'admin', 'view', 'update', 
+                'editableSaver', 'delete','ajaxCreate'],
+            'roles' => ['Ldm.PfOrderItemNotes.*'],
+        ],
+        [
             'allow',
-            'actions' => array('view', 'admin'), // let the user view the grid
-            'roles' => array('Ldm.PfOrderItemNotes.View'),
-        ),
-        array(
+            'actions' => ['create','ajaxCreate'],
+            'roles' => ['Ldm.PfOrderItemNotes.Create'],
+        ],
+        [
             'allow',
-            'actions' => array('update', 'editableSaver'),
-            'roles' => array('Ldm.PfOrderItemNotes.Update'),
-        ),
-        array(
+            'actions' => ['view', 'admin'], // let the user view the grid
+            'roles' => ['Ldm.PfOrderItemNotes.View'],
+        ],
+        [
             'allow',
-            'actions' => array('delete'),
-            'roles' => array('Ldm.PfOrderItemNotes.Delete'),
-        ),
-        array(
+            'actions' => ['update', 'editableSaver'],
+            'roles' => ['Ldm.PfOrderItemNotes.Update'],
+        ],
+        [
+            'allow',
+            'actions' => ['delete'],
+            'roles' => ['Ldm.PfOrderItemNotes.Delete'],
+        ],
+        [
             'deny',
-            'users' => array('*'),
-        ),
-    );
+            'users' => ['*'],
+        ],
+    ];
 }
 
     public function beforeAction($action)
     {
         parent::beforeAction($action);
         if ($this->module !== null) {
-            $this->breadcrumbs[$this->module->Id] = array('/' . $this->module->Id);
+            $this->breadcrumbs[$this->module->Id] = ['/' . $this->module->Id];
         }
         return true;
     }
@@ -66,13 +72,13 @@ public function accessRules()
         $model = $this->loadModel($id);
         if($ajax){
             $this->renderPartial('_view-relations_grids', 
-                    array(
+                    [
                         'modelMain' => $model,
                         'ajax' => $ajax,
-                        )
+                        ]
                     );
         }else{
-            $this->render('view', array('model' => $model,));
+            $this->render('view', ['model' => $model,]);
         }
     }
 
@@ -93,7 +99,7 @@ public function accessRules()
                     if (isset($_GET['returnUrl'])) {
                         $this->redirect($_GET['returnUrl']);
                     } else {
-                        $this->redirect(array('pfOrder/view', 'id' => $model->orderItem->order_id));
+                        $this->redirect(['pfOrder/view', 'id' => $model->orderItem->order_id]);
                     }
                 }
             } catch (Exception $e) {
@@ -103,7 +109,7 @@ public function accessRules()
             $model->attributes = $_GET['PfOrderItemNotes'];
         }
 
-        $this->render('create', array('model' => $model));
+        $this->render('create', ['model' => $model]);
     }
 
     public function actionUpdate($id)
@@ -122,7 +128,7 @@ public function accessRules()
                     if (isset($_GET['returnUrl'])) {
                         $this->redirect($_GET['returnUrl']);
                     } else {
-                        $this->redirect(array('view', 'id' => $model->id));
+                        $this->redirect(['view', 'id' => $model->id]);
                     }
                 }
             } catch (Exception $e) {
@@ -130,13 +136,21 @@ public function accessRules()
             }
         }
 
-        $this->render('update', array('model' => $model));
+        $this->render('update', ['model' => $model]);
     }
 
     public function actionEditableSaver()
     {
         $es = new EditableSaver('PfOrderItemNotes'); // classname of model to be updated
         $es->update();
+    }
+    
+    public function actionMarkAsRead($id)
+    {
+        $model = $this->loadModel($id);
+        $model->readed = new CDbExpression('NOW()');
+        $model->save();
+        $this->redirect(['pfOrder/view', 'id' => $model->orderItem->order_id]);
     }
 
     public function actionAjaxCreate($field, $value) 
@@ -167,7 +181,7 @@ public function accessRules()
                 if (isset($_GET['returnUrl'])) {
                     $this->redirect($_GET['returnUrl']);
                 } else {
-                    $this->redirect(array('admin'));
+                    $this->redirect(['admin']);
                 }
             }
         } else {
@@ -188,9 +202,15 @@ public function accessRules()
             $model->attributes = $_GET['PfOrderItemNotes'];
         }
 
-        $this->render('admin', array('model' => $model));
+        $this->render('admin', ['model' => $model]);
     }
 
+    /**
+     * load controller model
+     * @param int $id
+     * @return PfOrderItemNotes
+     * @throws CHttpException|
+     */
     public function loadModel($id)
     {
         $m = PfOrderItemNotes::model();
