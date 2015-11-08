@@ -58,20 +58,22 @@ foreach ($orderItems as $oi) {
             'readed' => $note->readed,
         ];
     }
-    $tableRows[] = [
-        'manufakturer_ccmp_id' => null,
-        'planed_ready_date' => [
-            'type' => tlbExcel::DATA_TYPE_TABLE,
-            'header' => [
-                'created' => 'Created',
-                'from_pprs_id' => 'From',
-                'to_pprs_id' => 'To',
-                'message' => 'Message',
-                'readed' => 'Readed',
+    if(!empty($noteRows)){
+        $tableRows[] = [
+            'manufakturer_ccmp_id' => null,
+            'planed_ready_date' => [
+                'type' => tlbExcel::DATA_TYPE_TABLE,
+                'header' => [
+                    'created' => 'Created',
+                    'from_pprs_id' => 'From',
+                    'to_pprs_id' => 'To',
+                    'message' => 'Message',
+                    'readed' => 'Readed',
+                ],
+                'rows' => $noteRows,
             ],
-            'rows' => $noteRows,
-        ],
-    ];
+        ];
+    }
 }
 
 $this->widget('tlbExcel', [
