@@ -1,12 +1,12 @@
 <?php
-$pageTitle = Yii::t('LdmModule.model', 'Create Pf Order Items');    
+$pageTitle = Yii::t('LdmModule.model', 'Create New Order Items');    
 $this->setPageTitle($pageTitle);
 
 $cancel_buton = $this->widget("bootstrap.widgets.TbButton", array(
     #"label"=>Yii::t("LdmModule.crud","Cancel"),
     "icon"=>"chevron-left",
     "size"=>"large",
-    "url"=>(isset($_GET["returnUrl"]))?$_GET["returnUrl"]:array("{$this->id}/admin"),
+    "url"=>array("pfOrder/view",'id' => $model->order_id),
     "visible"=>(Yii::app()->user->checkAccess("Ldm.PfOrderItems.*") || Yii::app()->user->checkAccess("Ldm.PfOrderItems.View")),
     "htmlOptions"=>array(
                     "class"=>"search-button",

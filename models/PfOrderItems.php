@@ -6,6 +6,8 @@ Yii::import('PfOrderItems.*');
 
 class PfOrderItems extends BasePfOrderItems {
 
+    public $label;
+    
     // Add your model-specific methods here. This file will not be overriden by gtc except you force it.
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -83,6 +85,27 @@ class PfOrderItems extends BasePfOrderItems {
         $order->save();
         
         parent::afterSave();
+    }
+    
+    public function findPlaningOtherOrderItems($order_id) {
+        $criteria = new CDbCriteria;
+
+        $criteria->select = "t.id,concat(concat(YEAR(planed_dispatch_date),'/',WEEK(planed_dispatch_date,1)), ' | ', o.number, ' | ', client.ccmp_name, ' | ', manufacturer.ccmp_name) label";
+        
+        $criteria->join = "  
+            INNER JOIN pf_order o 
+              ON o.id = t.order_id 
+            INNER JOIN ccmp_company `client` 
+              ON o.client_ccmp_id = `client`.ccmp_id 
+            INNER JOIN ccmp_company manufacturer 
+              ON t.manufakturer_ccmp_id = manufacturer.ccmp_id 
+            ";
+        $criteria->compare('o.status', PfOrder::STATUS_PLANING);
+        $criteria->addCondition('t.order_id != ' . $order_id);
+        
+        $criteria->order = 'o.planed_dispatch_date DESC,o.number';
+                
+        return $this->findAll($criteria);
     }
 
 }

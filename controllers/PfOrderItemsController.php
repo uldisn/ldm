@@ -41,6 +41,11 @@ class PfOrderItemsController extends Controller {
                 'roles' => ['Ldm.PfOrderItems.Delete'],
             ],
             [
+                'allow',
+                'actions' => ['getOther'],
+                'roles' => ['Administrator'],
+            ],
+            [
                 'deny',
                 'users' => ['*'],
             ],
@@ -93,6 +98,19 @@ class PfOrderItemsController extends Controller {
         }
 
         $this->render('create', ['model' => $model]);
+    }
+
+    public function actionGetOther($order_id) {
+
+        if (isset($_POST['order_item_id'])) {
+
+            $model = $this->loadModel($_POST['order_item_id']);
+            $model->order_id = $order_id;
+            $model->save();
+
+            $this->redirect(['pfOrder/view', 'id' => $order_id]);
+        }
+        $this->render('getOther', ['order_id' => $order_id]);
     }
 
     public function actionUpdate($id) {
@@ -168,6 +186,12 @@ class PfOrderItemsController extends Controller {
         $this->render('admin', ['model' => $model]);
     }
 
+    /**
+     * 
+     * @param type $id
+     * @return PfOrderItems 
+     * @throws CHttpException
+     */
     public function loadModel($id) {
         $m = PfOrderItems::model();
         // apply scope, if available
