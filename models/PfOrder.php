@@ -125,10 +125,10 @@ class PfOrder extends BasePfOrder {
                 $cl = ['0'];
             }
         
-            $criteria->condition = "
+            $criteria->addCondition( "
                        t.client_ccmp_id           in (" . implode(',', $cl) . ") "      //orders ir usera kompānija
                     . " or items.manufakturer_ccmp_id in (" . implode(',', $cl) . ") "  //itema ražotājs ir user kompānija
-                    . " or items.manufakturer_ccmp_id is null";                         //orderim vēl nav neviens items
+                    . " or items.manufakturer_ccmp_id is null");                         //orderim vēl nav neviens items
         }
         
         /**
