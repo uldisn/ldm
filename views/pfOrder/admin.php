@@ -179,6 +179,7 @@ $this->widget('TbGridView', [
                 :
                 \'\'
                 ',
+             'filter'=>false,
         ],
         [
             'class' => 'TbButtonColumn',
