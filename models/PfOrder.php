@@ -74,10 +74,13 @@ class PfOrder extends BasePfOrder {
     }
 
     public function searchClient($criteria = null) {
+        
         if (is_null($criteria)) {
             $criteria = new CDbCriteria;
         }
+        
         $criteria = $this->searchCriteria($criteria);
+        $sort = new CSort;
 
         $userPersonId = Yii::app()->getModule('user')->user()->profile->person_id;        
 
@@ -136,6 +139,15 @@ class PfOrder extends BasePfOrder {
          */
         $criteria->select .= ",concat(YEAR(planed_dispatch_date),'/',WEEK(planed_dispatch_date,1)) week_number";
         $criteria->compare("concat(YEAR(planed_dispatch_date),'/',WEEK(planed_dispatch_date,1))", $this->week_number, true);
+        $sort->attributes = [
+            'week_number' => [
+                'asc'=>'planed_dispatch_date',
+                'desc'=>'planed_dispatch_date DESC',
+                //'label'=>'Item Price',
+                //'default'=>'desc',
+            ],
+            '*',
+        ];
 
         /**
          * manufakturer
@@ -175,12 +187,15 @@ class PfOrder extends BasePfOrder {
 
         $criteria->group = 't.id';
         
+        /* Default Sort Order*/
+        $sort->defaultOrder= array(
+            'planed_dispatch_date'=>CSort::SORT_DESC,
+        );
+        
         return new CActiveDataProvider(get_class($this), [
             'criteria' => $criteria,
             'pagination' => ['pageSize' => 25],
-            'sort'=>[
-                'defaultOrder'=>'planed_dispatch_date DESC',
-            ],            
+            'sort'=>$sort,            
         ]);
     }
 
