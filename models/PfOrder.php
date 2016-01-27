@@ -179,7 +179,7 @@ class PfOrder extends BasePfOrder {
             'criteria' => $criteria,
             'pagination' => ['pageSize' => 25],
             'sort'=>[
-                'defaultOrder'=>'week_number DESC',
+                'defaultOrder'=>'planed_dispatch_date DESC',
             ],            
         ]);
     }
